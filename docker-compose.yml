@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Backend API Service (FastAPI)
+  # ============================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: resume_intelligence_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=local
+      - DEBUG=true
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/resume_intelligence
+      - DATABASE_URL_SYNC=postgresql://postgres:postgres@db:5432/resume_intelligence
+      - REDIS_URL=redis://redis:6379/0
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+    volumes:
+      - ./backend:/app
+      - backend_uploads:/app/temp/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - resume_net
+
+  # ============================================================================
+  # Frontend Web Client (Next.js)
+  # ============================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: resume_intelligence_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - NEXT_PUBLIC_APP_NAME=AI Resume Intelligence Platform
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    networks:
+      - resume_net
+
+  # ============================================================================
+  # Database Service (PostgreSQL 16 + pgvector)
+  # ============================================================================
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: resume_intelligence_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=resume_intelligence
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d resume_intelligence"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - resume_net
+
+  # ============================================================================
+  # Cache & Rate Limiting (Redis 7)
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: resume_intelligence_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - resume_net
+
+  # ============================================================================
+  # Local LLM Runtime (Ollama - Optional Profile)
+  # Run with: docker compose --profile local-ai up
+  # ============================================================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: resume_intelligence_ollama
+    restart: unless-stopped
+    profiles: ["local-ai"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - resume_net
+
+networks:
+  resume_net:
+    driver: bridge
+
+volumes:
+  pgdata:
+  redisdata:
+  ollama_data:
+  backend_uploads:
