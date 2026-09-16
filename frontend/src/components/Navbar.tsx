@@ -1,33 +1,66 @@
 "use client";
 
 import React from "react";
-import { Sparkles, Cpu, LogIn, UserPlus, LogOut, User as UserIcon, Shield } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Sparkles, Cpu, LogIn, UserPlus, LogOut, Shield, LayoutDashboard, Edit3, Home } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export const Navbar: React.FC = () => {
   const { user, openAuthModal, logout } = useAuth();
+  const pathname = usePathname();
+
+  const navLinks = [
+    { href: "/", label: "Overview", icon: Home },
+    { href: "/dashboard", label: "Master Profile", icon: LayoutDashboard },
+    { href: "/builder", label: "Resume Builder", icon: Edit3 },
+  ];
 
   return (
     <header className="border-b border-white/10 bg-slate-950/60 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo & Title */}
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="font-bold text-lg tracking-tight text-white">
-                ResumeIQ
-              </span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">
-                v3.0 • Phase 1
-              </span>
+        <div className="flex items-center space-x-6">
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-all">
+              <Sparkles className="w-5 h-5" />
             </div>
-            <p className="text-xs text-slate-400 hidden sm:block">
-              AI Resume Intelligence & Multi-Version ATS Platform
-            </p>
-          </div>
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className="font-bold text-lg tracking-tight text-white">
+                  ResumeIQ
+                </span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">
+                  v3.0 • Phase 2
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 hidden sm:block">
+                AI Resume Intelligence & Multi-Version ATS Platform
+              </p>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isActive
+                      ? "bg-white/10 text-white shadow-sm"
+                      : "text-slate-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>{link.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
 
         {/* Actions & Status */}
