@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CheckCircle2, Clock, CircleDot, ChevronRight, Shield } from "lucide-react";
+import { CheckCircle2, Clock, CircleDot, Shield } from "lucide-react";
 
 export const PhaseRoadmap: React.FC = () => {
   const phases = [
@@ -17,15 +17,15 @@ export const PhaseRoadmap: React.FC = () => {
       phase: 1,
       title: "Identity & Access",
       duration: "2 Weeks",
-      status: "in_progress",
-      deliverable: "Working signup/login, JWT access + refresh auth, Candidate & Admin RBAC",
-      security: "Argon2/bcrypt hashing, rate-limited login, IDOR checks",
+      status: "completed",
+      deliverable: "Working signup/login, JWT access + refresh auth, Candidate & Admin RBAC, Brute-force protection",
+      security: "Bcrypt 12-round hashing, sliding-window rate-limiting, IDOR token isolation (T1.1–T1.6 passed)",
     },
     {
       phase: 2,
       title: "Candidate Profile & Resume Builder",
       duration: "3 Weeks",
-      status: "pending",
+      status: "in_progress",
       deliverable: "Structured profile (single source of truth) + Resume Builder UI",
       security: "Field validation, user-scoped authorization, rich-text sanitization",
     },
@@ -69,10 +69,10 @@ export const PhaseRoadmap: React.FC = () => {
         </div>
         <div className="flex items-center space-x-2 text-xs font-mono">
           <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            Phase 0 Done
+            Phase 0 & 1 Completed
           </span>
           <span className="px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-            Phase 1 Next
+            Phase 2 Next
           </span>
         </div>
       </div>
@@ -106,7 +106,7 @@ export const PhaseRoadmap: React.FC = () => {
                   ) : isCurrent ? (
                     <span className="flex items-center space-x-1 text-indigo-400 text-xs font-medium animate-pulse">
                       <Clock className="w-3.5 h-3.5" />
-                      <span>Next Phase</span>
+                      <span>In Progress</span>
                     </span>
                   ) : (
                     <span className="text-slate-500 text-xs">Upcoming</span>

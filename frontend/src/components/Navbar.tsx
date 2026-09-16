@@ -1,9 +1,12 @@
 "use client";
 
 import React from "react";
-import { Sparkles, Shield, Cpu, Terminal } from "lucide-react";
+import { Sparkles, Cpu, LogIn, UserPlus, LogOut, User as UserIcon, Shield } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export const Navbar: React.FC = () => {
+  const { user, openAuthModal, logout } = useAuth();
+
   return (
     <header className="border-b border-white/10 bg-slate-950/60 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -18,7 +21,7 @@ export const Navbar: React.FC = () => {
                 ResumeIQ
               </span>
               <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">
-                v3.0 • Phase 0
+                v3.0 • Phase 1
               </span>
             </div>
             <p className="text-xs text-slate-400 hidden sm:block">
@@ -27,18 +30,55 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Status Indicators */}
-        <div className="flex items-center space-x-4">
-          <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300">
+        {/* Actions & Status */}
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          <div className="hidden lg:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300">
             <Cpu className="w-3.5 h-3.5 text-emerald-400" />
             <span>Dual-Mode AI:</span>
             <span className="text-emerald-400 font-semibold font-mono">Ollama / Azure OpenAI</span>
           </div>
 
-          <div className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="font-medium">Baseline Ready</span>
-          </div>
+          {user ? (
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs">
+                <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-[10px]">
+                  {user.full_name.charAt(0).toUpperCase()}
+                </div>
+                <div className="hidden sm:block text-left">
+                  <div className="font-medium text-white leading-none">{user.full_name}</div>
+                  <div className="text-[10px] text-indigo-300 flex items-center space-x-1 mt-0.5">
+                    {user.role === "admin" && <Shield className="w-2.5 h-2.5 text-violet-400 inline" />}
+                    <span className="capitalize">{user.role}</span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={logout}
+                title="Sign Out"
+                className="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all text-xs"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => openAuthModal("signin")}
+                className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-white/10 text-xs font-medium transition-all"
+              >
+                <LogIn className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Sign In</span>
+              </button>
+              <button
+                onClick={() => openAuthModal("signup")}
+                className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-500/20 transition-all"
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                <span>Register</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

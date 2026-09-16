@@ -31,8 +31,7 @@ class PIIFilter(logging.Filter):
                 )
             elif isinstance(record.args, dict):
                 record.args = {
-                    k: self.sanitize(v) if isinstance(v, str) else v
-                    for k, v in record.args.items()
+                    k: self.sanitize(v) if isinstance(v, str) else v for k, v in record.args.items()
                 }
         return True
 

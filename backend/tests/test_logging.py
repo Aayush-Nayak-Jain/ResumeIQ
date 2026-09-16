@@ -14,8 +14,7 @@ def test_pii_filter_redacts_email():
 def test_pii_filter_redacts_bearer_token():
     """Verify JWT Bearer tokens are redacted from log messages."""
     text = (
-        "Request authorization: Bearer "
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0In0.abc"
+        "Request authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0In0.abc"
     )
     sanitized = PIIFilter.sanitize(text)
     assert "eyJhbGciOiJIUzI1Ni" not in sanitized
@@ -25,8 +24,7 @@ def test_pii_filter_redacts_bearer_token():
 def test_pii_filter_redacts_passwords():
     """Verify passwords in JSON structures are redacted."""
     text = (
-        'Authentication payload: {"email": "test@test.com", '
-        '"password": "supersecretpassword123"}'
+        'Authentication payload: {"email": "test@test.com", "password": "supersecretpassword123"}'
     )
     sanitized = PIIFilter.sanitize(text)
     assert "supersecretpassword123" not in sanitized
