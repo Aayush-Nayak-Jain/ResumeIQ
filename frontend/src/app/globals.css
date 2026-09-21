@@ -3,18 +3,41 @@
 @tailwind utilities;
 
 :root {
-  --background: #090d16;
-  --foreground: #f8fafc;
-  --card-bg: rgba(15, 23, 42, 0.75);
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(226, 232, 240, 0.9);
+  --accent-glow: rgba(16, 185, 129, 0.1);
+  --nav-bg: rgba(255, 255, 255, 0.85);
+  --muted-text: #64748b;
+}
+
+.dark {
+  --background: #090a0f;
+  --foreground: #f1f5f9;
+  --card-bg: rgba(18, 20, 29, 0.85);
   --card-border: rgba(255, 255, 255, 0.08);
-  --accent-glow: rgba(99, 102, 241, 0.15);
+  --accent-glow: rgba(16, 185, 129, 0.12);
+  --nav-bg: rgba(9, 10, 15, 0.85);
+  --muted-text: #94a3b8;
 }
 
 body {
   color: var(--foreground);
-  background: radial-gradient(circle at 50% 0%, #151b30 0%, #090d16 70%);
+  background-color: var(--background);
   min-height: 100vh;
   font-feature-settings: "rlig" 1, "calt" 1;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.dark body,
+html.dark body {
+  background: radial-gradient(circle at 50% 0%, #171b26 0%, #090a0f 75%);
+}
+
+html.light body,
+body:not(.dark) {
+  background: radial-gradient(circle at 50% 0%, #f1f5f9 0%, #f8fafc 75%);
 }
 
 /* Glassmorphic Cards */
@@ -23,7 +46,11 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--card-border);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.07);
+}
+
+.dark .glass-panel {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
 }
 
 .glass-panel-hover {
@@ -31,12 +58,18 @@ body {
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(99, 102, 241, 0.35);
   transform: translateY(-2px);
-  box-shadow: 0 20px 35px -15px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 20px 35px -15px rgba(0, 0, 0, 0.12);
+}
+
+.dark .glass-panel-hover:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 35px -15px rgba(0, 0, 0, 0.7);
 }
 
 /* Custom glowing badge */
 .glow-badge {
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
 }
+
+

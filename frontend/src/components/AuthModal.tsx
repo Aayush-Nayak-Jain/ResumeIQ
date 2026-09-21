@@ -60,10 +60,10 @@ export const AuthModal: React.FC = () => {
   const isPasswordValid = hasMinLength && hasLetter && hasNumber;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-md p-6 overflow-hidden rounded-2xl glass-panel border border-white/10 shadow-2xl bg-slate-950/90 text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
+      <div className="relative w-full max-w-md p-6 overflow-hidden rounded-2xl glass-panel border border-white/10 shadow-2xl bg-slate-950/95 text-white">
         {/* Glow Accent */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/15 rounded-full filter blur-3xl pointer-events-none -z-10"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full filter blur-3xl pointer-events-none -z-10"></div>
 
         {/* Close Button */}
         <button
@@ -75,15 +75,15 @@ export const AuthModal: React.FC = () => {
 
         {/* Header */}
         <div className="text-center pt-2 pb-4">
-          <div className="w-12 h-12 mx-auto rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 mb-3">
-            <Lock className="w-6 h-6" />
+          <div className="w-12 h-12 mx-auto rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200 mb-3 shadow-lg">
+            <Lock className="w-6 h-6 text-emerald-400" />
           </div>
           <h3 className="text-xl font-bold tracking-tight text-white">
             {isSignup ? "Create an Account" : "Sign In to ResumeIQ"}
           </h3>
           <p className="text-xs text-slate-400 mt-1">
             {isSignup
-              ? "Access AI-powered ATS resume matching and version intelligence."
+              ? "Access ATS resume matching, bullet point auditing, and version intelligence."
               : "Welcome back! Enter your credentials to manage your resumes."}
           </p>
         </div>
@@ -95,7 +95,7 @@ export const AuthModal: React.FC = () => {
             onClick={() => openAuthModal("signin")}
             className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
               !isSignup
-                ? "bg-indigo-600 text-white shadow-sm"
+                ? "bg-slate-800 text-white border border-slate-700 shadow-sm"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -106,7 +106,7 @@ export const AuthModal: React.FC = () => {
             onClick={() => openAuthModal("signup")}
             className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
               isSignup
-                ? "bg-indigo-600 text-white shadow-sm"
+                ? "bg-slate-800 text-white border border-slate-700 shadow-sm"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -137,7 +137,7 @@ export const AuthModal: React.FC = () => {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Alex Mercer"
-                  className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                  className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 transition-all"
                 />
               </div>
             </div>
@@ -155,7 +155,7 @@ export const AuthModal: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 transition-all"
               />
             </div>
           </div>
@@ -172,7 +172,7 @@ export const AuthModal: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 transition-all"
               />
             </div>
 
@@ -206,7 +206,7 @@ export const AuthModal: React.FC = () => {
                   onClick={() => setRole("candidate")}
                   className={`p-2 rounded-xl border text-xs font-medium flex items-center justify-center space-x-1.5 transition-all ${
                     role === "candidate"
-                      ? "bg-indigo-600/20 border-indigo-500 text-indigo-300"
+                      ? "bg-slate-800 border-slate-600 text-white"
                       : "bg-slate-900/60 border-white/5 text-slate-400 hover:text-white"
                   }`}
                 >
@@ -218,7 +218,7 @@ export const AuthModal: React.FC = () => {
                   onClick={() => setRole("admin")}
                   className={`p-2 rounded-xl border text-xs font-medium flex items-center justify-center space-x-1.5 transition-all ${
                     role === "admin"
-                      ? "bg-indigo-600/20 border-indigo-500 text-indigo-300"
+                      ? "bg-slate-800 border-slate-600 text-white"
                       : "bg-slate-900/60 border-white/5 text-slate-400 hover:text-white"
                   }`}
                 >
@@ -232,7 +232,7 @@ export const AuthModal: React.FC = () => {
           <button
             type="submit"
             disabled={submitting || (isSignup && !isPasswordValid)}
-            className="w-full mt-4 py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-semibold shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-4 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-white text-slate-900 text-xs font-semibold shadow-lg flex items-center justify-center space-x-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? (
               <Loader2 className="w-4 h-4 animate-spin" />

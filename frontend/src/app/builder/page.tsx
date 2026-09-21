@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { 
   Sparkles, 
-  Save, 
   Eye, 
   Plus, 
   Trash2, 
   CheckCircle2, 
-  AlertCircle, 
   FileText, 
   Briefcase, 
   GraduationCap, 
@@ -16,12 +14,14 @@ import {
   FolderGit2, 
   User, 
   Download,
-  Check
+  Check,
+  X,
+  AlertCircle
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 export default function BuilderPage() {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("experience");
   const [template, setTemplate] = useState<"classic" | "modern" | "executive">("classic");
   const [autoSaved, setAutoSaved] = useState(true);
@@ -87,6 +87,9 @@ export default function BuilderPage() {
     { name: "Docker", category: "tool", proficiency: "intermediate" },
   ]);
 
+  const [newSkillName, setNewSkillName] = useState("");
+  const [newSkillProficiency, setNewSkillProficiency] = useState("intermediate");
+
   const [projects, setProjects] = useState([
     {
       id: "1",
@@ -99,7 +102,7 @@ export default function BuilderPage() {
   // Handle live input change with auto-save simulation
   const handleDataChange = () => {
     setAutoSaved(false);
-    setTimeout(() => setAutoSaved(true), 800);
+    setTimeout(() => setAutoSaved(true), 600);
   };
 
   // Helper to detect evidence quality badge on bullet points
@@ -109,7 +112,7 @@ export default function BuilderPage() {
 
     if (hasMetric) {
       return (
-        <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono">
+        <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono shrink-0">
           <Check className="w-2.5 h-2.5" />
           <span>Metric-backed</span>
         </span>
@@ -117,16 +120,102 @@ export default function BuilderPage() {
     }
     if (hasActionVerb) {
       return (
-        <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-mono">
+        <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-mono shrink-0">
           <span>Action-oriented</span>
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-mono">
+      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-mono shrink-0">
         <span>Needs metric</span>
       </span>
     );
+  };
+
+  // Section Deletion & Addition Handlers
+  const removeExperience = (id: string) => {
+    setExperiences(experiences.filter((exp) => exp.id !== id));
+    handleDataChange();
+  };
+
+  const addExperience = () => {
+    const newExp = {
+      id: Date.now().toString(),
+      company: "New Company",
+      title: "Role Title",
+      location: "Location",
+      dates: "Year - Present",
+      bullets: ["Accomplished [X] as measured by [Y] by doing [Z]."],
+    };
+    setExperiences([...experiences, newExp]);
+    handleDataChange();
+  };
+
+  const removeBullet = (expIdx: number, bulletIdx: number) => {
+    const updated = [...experiences];
+    updated[expIdx].bullets = updated[expIdx].bullets.filter((_, idx) => idx !== bulletIdx);
+    setExperiences(updated);
+    handleDataChange();
+  };
+
+  const addBullet = (expIdx: number) => {
+    const updated = [...experiences];
+    updated[expIdx].bullets.push("Engineered and scaled system resulting in quantifiable performance improvement.");
+    setExperiences(updated);
+    handleDataChange();
+  };
+
+  const removeEducation = (id: string) => {
+    setEducation(education.filter((edu) => edu.id !== id));
+    handleDataChange();
+  };
+
+  const addEducation = () => {
+    const newEdu = {
+      id: Date.now().toString(),
+      institution: "University / Institution",
+      degree: "Degree / Program",
+      dates: "Year - Year",
+      grade: "Grade / Honors",
+    };
+    setEducation([...education, newEdu]);
+    handleDataChange();
+  };
+
+  const removeSkill = (indexToRemove: number) => {
+    setSkills(skills.filter((_, idx) => idx !== indexToRemove));
+    handleDataChange();
+  };
+
+  const addSkill = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSkillName.trim()) return;
+    setSkills([
+      ...skills,
+      {
+        name: newSkillName.trim(),
+        category: "technical",
+        proficiency: newSkillProficiency,
+      },
+    ]);
+    setNewSkillName("");
+    handleDataChange();
+  };
+
+  const removeProject = (id: string) => {
+    setProjects(projects.filter((proj) => proj.id !== id));
+    handleDataChange();
+  };
+
+  const addProject = () => {
+    const newProj = {
+      id: Date.now().toString(),
+      title: "New Project",
+      description: "Brief description of the application architecture, impact, and features.",
+      technologies: "Tech stack used",
+    };
+    setProjects([...projects, newProj]);
+    handleDataChange();
   };
 
   const completeness = 88;
@@ -136,8 +225,8 @@ export default function BuilderPage() {
       {/* Top Workspace Header */}
       <div className="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border border-white/10 shadow-xl">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold">
-            <FileText className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center font-bold">
+            <FileText className="w-5 h-5 text-emerald-400" />
           </div>
           <div>
             <input
@@ -147,7 +236,7 @@ export default function BuilderPage() {
                 setResumeTitle(e.target.value);
                 handleDataChange();
               }}
-              className="text-base sm:text-lg font-bold text-white bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-indigo-500 rounded px-1 transition-all"
+              className="text-base sm:text-lg font-bold text-white bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-slate-500 rounded px-1 transition-all"
             />
             <div className="flex items-center space-x-2 text-xs text-slate-400 mt-0.5">
               <span>ATS Resume Builder</span>
@@ -166,7 +255,7 @@ export default function BuilderPage() {
           </div>
         </div>
 
-        {/* Right Header Controls: Gauge, Template selector & Print */}
+        {/* Right Header Controls */}
         <div className="flex items-center space-x-3 sm:space-x-4">
           {/* Completeness Gauge */}
           <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-white/5">
@@ -179,7 +268,7 @@ export default function BuilderPage() {
                   r="13"
                   stroke="currentColor"
                   strokeWidth="2.5"
-                  className="text-indigo-400"
+                  className="text-emerald-400"
                   fill="transparent"
                   strokeDasharray="81.68"
                   strokeDashoffset={81.68 - (81.68 * completeness) / 100}
@@ -197,7 +286,7 @@ export default function BuilderPage() {
           <select
             value={template}
             onChange={(e: any) => setTemplate(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+            className="px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-slate-500"
           >
             <option value="classic">Classic Professional</option>
             <option value="modern">Modern Technical</option>
@@ -207,7 +296,7 @@ export default function BuilderPage() {
           {/* Print/Download Button */}
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-500/20 transition-all"
+            className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-white text-slate-900 text-xs font-semibold shadow-md transition-all"
           >
             <Download className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Export ATS PDF</span>
@@ -237,11 +326,11 @@ export default function BuilderPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-medium transition-all ${
                     isActive
-                      ? "bg-indigo-600 text-white shadow-sm"
+                      ? "bg-slate-800 text-white border border-slate-700 shadow-sm"
                       : "text-slate-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-400" : "text-slate-400"}`} />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -254,7 +343,7 @@ export default function BuilderPage() {
             {activeTab === "contact" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-white flex items-center space-x-2">
-                  <User className="w-4 h-4 text-indigo-400" />
+                  <User className="w-4 h-4 text-emerald-400" />
                   <span>Personal & Contact Information</span>
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -267,7 +356,7 @@ export default function BuilderPage() {
                         setPersonalInfo({ ...personalInfo, fullName: e.target.value });
                         handleDataChange();
                       }}
-                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-slate-500"
                     />
                   </div>
                   <div>
@@ -279,7 +368,7 @@ export default function BuilderPage() {
                         setPersonalInfo({ ...personalInfo, email: e.target.value });
                         handleDataChange();
                       }}
-                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-slate-500"
                     />
                   </div>
                   <div>
@@ -291,7 +380,7 @@ export default function BuilderPage() {
                         setPersonalInfo({ ...personalInfo, phone: e.target.value });
                         handleDataChange();
                       }}
-                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-slate-500"
                     />
                   </div>
                   <div>
@@ -303,7 +392,31 @@ export default function BuilderPage() {
                         setPersonalInfo({ ...personalInfo, location: e.target.value });
                         handleDataChange();
                       }}
-                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-slate-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-slate-400 mb-1">LinkedIn Profile</label>
+                    <input
+                      type="text"
+                      value={personalInfo.linkedin}
+                      onChange={(e) => {
+                        setPersonalInfo({ ...personalInfo, linkedin: e.target.value });
+                        handleDataChange();
+                      }}
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-slate-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-slate-400 mb-1">GitHub / Portfolio</label>
+                    <input
+                      type="text"
+                      value={personalInfo.github}
+                      onChange={(e) => {
+                        setPersonalInfo({ ...personalInfo, github: e.target.value });
+                        handleDataChange();
+                      }}
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-slate-500"
                     />
                   </div>
                 </div>
@@ -315,7 +428,7 @@ export default function BuilderPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold text-white flex items-center space-x-2">
-                    <Sparkles className="w-4 h-4 text-indigo-400" />
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
                     <span>Professional Summary</span>
                   </h3>
                   <span className="text-[10px] text-slate-400 font-mono">{summary.length} characters</span>
@@ -327,9 +440,9 @@ export default function BuilderPage() {
                     setSummary(e.target.value);
                     handleDataChange();
                   }}
-                  className="w-full p-3 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-indigo-500 leading-relaxed"
+                  className="w-full p-3 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-slate-500 leading-relaxed"
                 />
-                <div className="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 text-xs text-indigo-200 flex items-start space-x-2">
+                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300 flex items-start space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span>
                     <strong>ATS Tip:</strong> Highlight your total years of experience, core technical stack, and a quantified achievement in the first two sentences.
@@ -343,120 +456,208 @@ export default function BuilderPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold text-white flex items-center space-x-2">
-                    <Briefcase className="w-4 h-4 text-indigo-400" />
+                    <Briefcase className="w-4 h-4 text-emerald-400" />
                     <span>Work Experience & Impact</span>
                   </h3>
+                  <button
+                    onClick={addExperience}
+                    className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-xs font-medium transition-all"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Add Experience</span>
+                  </button>
                 </div>
 
-                {experiences.map((exp, expIdx) => (
-                  <div key={exp.id} className="p-4 rounded-xl bg-slate-900/80 border border-white/10 space-y-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[10px] text-slate-400 mb-1">Company</label>
-                        <input
-                          type="text"
-                          value={exp.company}
-                          onChange={(e) => {
-                            const newExp = [...experiences];
-                            newExp[expIdx].company = e.target.value;
-                            setExperiences(newExp);
-                            handleDataChange();
-                          }}
-                          className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] text-slate-400 mb-1">Job Title</label>
-                        <input
-                          type="text"
-                          value={exp.title}
-                          onChange={(e) => {
-                            const newExp = [...experiences];
-                            newExp[expIdx].title = e.target.value;
-                            setExperiences(newExp);
-                            handleDataChange();
-                          }}
-                          className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] text-slate-400 mb-1">Dates</label>
-                        <input
-                          type="text"
-                          value={exp.dates}
-                          onChange={(e) => {
-                            const newExp = [...experiences];
-                            newExp[expIdx].dates = e.target.value;
-                            setExperiences(newExp);
-                            handleDataChange();
-                          }}
-                          className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] text-slate-400 mb-1">Location</label>
-                        <input
-                          type="text"
-                          value={exp.location}
-                          onChange={(e) => {
-                            const newExp = [...experiences];
-                            newExp[expIdx].location = e.target.value;
-                            setExperiences(newExp);
-                            handleDataChange();
-                          }}
-                          className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Bullet Points with Evidence Quality Evaluation */}
-                    <div className="space-y-2 mt-2">
-                      <label className="block text-[10px] font-semibold text-slate-300 uppercase tracking-wider">
-                        Accomplishment Bullet Points
-                      </label>
-                      {exp.bullets.map((b, bIdx) => (
-                        <div key={bIdx} className="space-y-1">
-                          <div className="flex items-center space-x-2">
-                            <input
-                              type="text"
-                              value={b}
-                              onChange={(e) => {
-                                const newExp = [...experiences];
-                                newExp[expIdx].bullets[bIdx] = e.target.value;
-                                setExperiences(newExp);
-                                handleDataChange();
-                              }}
-                              className="flex-1 px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white"
-                            />
-                            {getEvidenceBadge(b)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                {experiences.length === 0 ? (
+                  <div className="p-6 text-center border border-dashed border-slate-800 rounded-xl text-slate-400 text-xs">
+                    No work experiences added yet. Click &quot;Add Experience&quot; above to begin.
                   </div>
-                ))}
+                ) : (
+                  experiences.map((exp, expIdx) => (
+                    <div key={exp.id} className="p-4 rounded-xl bg-slate-900/80 border border-white/10 space-y-3 relative group">
+                      {/* Section Removal Button */}
+                      <div className="flex justify-between items-center pb-1 border-b border-white/5">
+                        <span className="text-xs font-semibold text-slate-300">
+                          Experience #{expIdx + 1}
+                        </span>
+                        <button
+                          onClick={() => removeExperience(exp.id)}
+                          title="Remove Experience Entry"
+                          className="inline-flex items-center space-x-1 text-slate-500 hover:text-red-400 text-xs px-2 py-1 rounded-lg hover:bg-red-500/10 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Remove Entry</span>
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[10px] text-slate-400 mb-1">Company</label>
+                          <input
+                            type="text"
+                            value={exp.company}
+                            onChange={(e) => {
+                              const newExp = [...experiences];
+                              newExp[expIdx].company = e.target.value;
+                              setExperiences(newExp);
+                              handleDataChange();
+                            }}
+                            className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white focus:outline-none focus:border-slate-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] text-slate-400 mb-1">Job Title</label>
+                          <input
+                            type="text"
+                            value={exp.title}
+                            onChange={(e) => {
+                              const newExp = [...experiences];
+                              newExp[expIdx].title = e.target.value;
+                              setExperiences(newExp);
+                              handleDataChange();
+                            }}
+                            className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white focus:outline-none focus:border-slate-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] text-slate-400 mb-1">Dates</label>
+                          <input
+                            type="text"
+                            value={exp.dates}
+                            onChange={(e) => {
+                              const newExp = [...experiences];
+                              newExp[expIdx].dates = e.target.value;
+                              setExperiences(newExp);
+                              handleDataChange();
+                            }}
+                            className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white focus:outline-none focus:border-slate-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] text-slate-400 mb-1">Location</label>
+                          <input
+                            type="text"
+                            value={exp.location}
+                            onChange={(e) => {
+                              const newExp = [...experiences];
+                              newExp[expIdx].location = e.target.value;
+                              setExperiences(newExp);
+                              handleDataChange();
+                            }}
+                            className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white focus:outline-none focus:border-slate-500"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Bullet Points with Sub-section removal and addition */}
+                      <div className="space-y-2 mt-3">
+                        <div className="flex items-center justify-between">
+                          <label className="block text-[10px] font-semibold text-slate-300 uppercase tracking-wider">
+                            Accomplishment Bullets
+                          </label>
+                          <button
+                            onClick={() => addBullet(expIdx)}
+                            className="inline-flex items-center space-x-1 text-slate-400 hover:text-emerald-400 text-[11px] font-medium transition-colors"
+                          >
+                            <Plus className="w-3 h-3" />
+                            <span>Add Bullet</span>
+                          </button>
+                        </div>
+
+                        {exp.bullets.map((b, bIdx) => (
+                          <div key={bIdx} className="space-y-1">
+                            <div className="flex items-center space-x-2">
+                              <input
+                                type="text"
+                                value={b}
+                                onChange={(e) => {
+                                  const newExp = [...experiences];
+                                  newExp[expIdx].bullets[bIdx] = e.target.value;
+                                  setExperiences(newExp);
+                                  handleDataChange();
+                                }}
+                                className="flex-1 px-2.5 py-1.5 text-xs rounded-lg bg-slate-950 border border-white/10 text-white focus:outline-none focus:border-slate-500"
+                              />
+                              {getEvidenceBadge(b)}
+                              <button
+                                onClick={() => removeBullet(expIdx, bIdx)}
+                                title="Remove bullet point"
+                                className="p-1 rounded text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors shrink-0"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             )}
 
             {/* Skills Tab */}
             {activeTab === "skills" && (
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-white flex items-center space-x-2">
-                  <Code className="w-4 h-4 text-indigo-400" />
-                  <span>Skills & Competencies</span>
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {skills.map((s, idx) => (
-                    <div
-                      key={idx}
-                      className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-white/10 text-xs"
-                    >
-                      <span className="font-semibold text-white">{s.name}</span>
-                      <span className="text-[10px] text-indigo-400 font-mono px-1.5 py-0.5 rounded bg-indigo-500/10">
-                        {s.proficiency}
-                      </span>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+                    <Code className="w-4 h-4 text-emerald-400" />
+                    <span>Skills & Competencies</span>
+                  </h3>
+                  <span className="text-[11px] text-slate-400">{skills.length} skills added</span>
+                </div>
+
+                {/* Add new skill form */}
+                <form onSubmit={addSkill} className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="e.g. Kubernetes, Redis, PyTorch..."
+                    value={newSkillName}
+                    onChange={(e) => setNewSkillName(e.target.value)}
+                    className="flex-1 px-3 py-1.5 text-xs rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-slate-500"
+                  />
+                  <select
+                    value={newSkillProficiency}
+                    onChange={(e) => setNewSkillProficiency(e.target.value)}
+                    className="px-2.5 py-1.5 text-xs rounded-xl bg-slate-900 border border-white/10 text-slate-300 focus:outline-none"
+                  >
+                    <option value="expert">Expert</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="beginner">Beginner</option>
+                  </select>
+                  <button
+                    type="submit"
+                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-xs font-semibold flex items-center space-x-1"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Add</span>
+                  </button>
+                </form>
+
+                {/* Skills tags with delete option */}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {skills.length === 0 ? (
+                    <p className="text-xs text-slate-500">No skills listed yet.</p>
+                  ) : (
+                    skills.map((s, idx) => (
+                      <div
+                        key={idx}
+                        className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-white/10 text-xs group hover:border-slate-700 transition-all"
+                      >
+                        <span className="font-semibold text-white">{s.name}</span>
+                        <span className="text-[10px] text-slate-400 font-mono px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">
+                          {s.proficiency}
+                        </span>
+                        <button
+                          onClick={() => removeSkill(idx)}
+                          title="Remove skill"
+                          className="text-slate-500 hover:text-red-400 p-0.5 rounded transition-colors"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -464,33 +665,86 @@ export default function BuilderPage() {
             {/* Education Tab */}
             {activeTab === "education" && (
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-white flex items-center space-x-2">
-                  <GraduationCap className="w-4 h-4 text-indigo-400" />
-                  <span>Education</span>
-                </h3>
-                {education.map((edu, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-slate-900 border border-white/10 space-y-2">
-                    <div className="text-xs font-bold text-white">{edu.degree}</div>
-                    <div className="text-xs text-slate-400">{edu.institution} • {edu.dates}</div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+                    <GraduationCap className="w-4 h-4 text-emerald-400" />
+                    <span>Education</span>
+                  </h3>
+                  <button
+                    onClick={addEducation}
+                    className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-xs font-medium transition-all"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Add Education</span>
+                  </button>
+                </div>
+
+                {education.length === 0 ? (
+                  <div className="p-6 text-center border border-dashed border-slate-800 rounded-xl text-slate-400 text-xs">
+                    No education entries added yet.
                   </div>
-                ))}
+                ) : (
+                  education.map((edu, idx) => (
+                    <div key={edu.id} className="p-3.5 rounded-xl bg-slate-900 border border-white/10 space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="text-xs font-bold text-white">{edu.degree}</div>
+                          <div className="text-xs text-slate-400">{edu.institution} • {edu.dates}</div>
+                          {edu.grade && <div className="text-[11px] text-emerald-400 font-mono mt-0.5">{edu.grade}</div>}
+                        </div>
+                        <button
+                          onClick={() => removeEducation(edu.id)}
+                          title="Remove Education Entry"
+                          className="inline-flex items-center space-x-1 text-slate-500 hover:text-red-400 text-xs p-1 rounded hover:bg-red-500/10 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             )}
 
             {/* Projects Tab */}
             {activeTab === "projects" && (
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-white flex items-center space-x-2">
-                  <FolderGit2 className="w-4 h-4 text-indigo-400" />
-                  <span>Key Projects</span>
-                </h3>
-                {projects.map((proj, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-slate-900 border border-white/10 space-y-1.5">
-                    <div className="text-xs font-bold text-white">{proj.title}</div>
-                    <div className="text-xs text-slate-400 leading-relaxed">{proj.description}</div>
-                    <div className="text-[10px] text-indigo-300 font-mono">{proj.technologies}</div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+                    <FolderGit2 className="w-4 h-4 text-emerald-400" />
+                    <span>Key Projects</span>
+                  </h3>
+                  <button
+                    onClick={addProject}
+                    className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-xs font-medium transition-all"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Add Project</span>
+                  </button>
+                </div>
+
+                {projects.length === 0 ? (
+                  <div className="p-6 text-center border border-dashed border-slate-800 rounded-xl text-slate-400 text-xs">
+                    No projects added yet.
                   </div>
-                ))}
+                ) : (
+                  projects.map((proj) => (
+                    <div key={proj.id} className="p-3.5 rounded-xl bg-slate-900 border border-white/10 space-y-1.5">
+                      <div className="flex justify-between items-start">
+                        <div className="text-xs font-bold text-white">{proj.title}</div>
+                        <button
+                          onClick={() => removeProject(proj.id)}
+                          title="Remove Project"
+                          className="text-slate-500 hover:text-red-400 p-1 rounded hover:bg-red-500/10 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <div className="text-xs text-slate-400 leading-relaxed">{proj.description}</div>
+                      <div className="text-[10px] text-slate-300 font-mono">{proj.technologies}</div>
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>
@@ -500,10 +754,10 @@ export default function BuilderPage() {
         <div className="lg:col-span-6 sticky top-24">
           <div className="flex items-center justify-between pb-2 text-xs text-slate-400 font-mono">
             <span className="flex items-center space-x-1.5 text-white font-semibold">
-              <Eye className="w-4 h-4 text-indigo-400" />
+              <Eye className="w-4 h-4 text-emerald-400" />
               <span>Live ATS Document Preview</span>
             </span>
-            <span className="text-emerald-400">Standard ATS Format</span>
+            <span className="text-emerald-400">Single-Column ATS Standard</span>
           </div>
 
           {/* Rendered Resume Document Card */}
