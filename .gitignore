@@ -102,3 +102,8 @@ ollama_data/
 # Logs
 logs/
 *.log
+
+#Development plan 
+AI_Resume_Intelligence_Combined_Development_Plan main.md
+AI_Resume_Intelligence_Combined_Development_Plan main*.md
+implementation_plan.md

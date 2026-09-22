@@ -38,3 +38,87 @@ export interface PhaseMilestone {
   modules: string[];
   securityFocus: string;
 }
+
+export interface ParsedContactInfo {
+  full_name?: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  linkedin_url?: string;
+  github_url?: string;
+  portfolio_url?: string;
+}
+
+export interface ParsedWorkExperience {
+  id: string;
+  company: string;
+  title: string;
+  location?: string;
+  start_date: string;
+  end_date?: string;
+  is_current?: boolean;
+  bullets: string[];
+  technologies: string[];
+}
+
+export interface ParsedEducation {
+  id: string;
+  institution: string;
+  degree: string;
+  field_of_study?: string;
+  start_date: string;
+  end_date?: string;
+  grade?: string;
+}
+
+export interface ParsedSkill {
+  name: string;
+  category: "technical" | "soft" | "domain" | "tool";
+  proficiency: "beginner" | "intermediate" | "expert";
+}
+
+export interface ParsedProject {
+  id: string;
+  title: string;
+  description: string;
+  technologies: string[];
+  bullets: string[];
+  repo_url?: string;
+  demo_url?: string;
+}
+
+export interface ParsedCertification {
+  id: string;
+  name: string;
+  issuer: string;
+  issue_date?: string;
+  credential_id?: string;
+  url?: string;
+}
+
+export interface ParserMetadata {
+  file_name: string;
+  file_type: string;
+  file_size_bytes: number;
+  parsing_duration_ms: number;
+  detected_sections: string[];
+  section_counts: Record<string, number>;
+  confidence_score: number;
+}
+
+export interface ParsedResumeStructuredData {
+  personal_info: ParsedContactInfo;
+  summary: string;
+  experience: ParsedWorkExperience[];
+  education: ParsedEducation[];
+  skills: ParsedSkill[];
+  projects: ParsedProject[];
+  certifications: ParsedCertification[];
+}
+
+export interface ParsedResumeResponse {
+  raw_text: string;
+  structured_data: ParsedResumeStructuredData;
+  metadata: ParserMetadata;
+  completeness_score: number;
+}

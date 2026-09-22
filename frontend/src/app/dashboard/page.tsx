@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { 
   User as UserIcon, 
@@ -17,9 +17,11 @@ import {
   ShieldCheck,
   ChevronRight,
   TrendingUp,
-  Loader2
+  Loader2,
+  UploadCloud,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { ResumeUploadModal } from "../../components/ResumeUploadModal";
 
 interface ResumeSummary {
   id: string;
@@ -54,44 +56,44 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<CandidateProfileData | null>(null);
   const [resumes, setResumes] = useState<ResumeSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
-  useEffect(() => {
+  const loadDashboardData = useCallback(async () => {
     if (!token) {
       setLoading(false);
       return;
     }
+    setLoading(true);
+    try {
+      const [profileRes, resumesRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/profile/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch(`${API_BASE_URL}/resumes`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
 
-    const loadDashboardData = async () => {
-      setLoading(true);
-      try {
-        const [profileRes, resumesRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/profile/me`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch(`${API_BASE_URL}/resumes`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
-
-        if (profileRes.ok) {
-          const pData = await profileRes.json();
-          setProfile(pData);
-        }
-        if (resumesRes.ok) {
-          const rData = await resumesRes.json();
-          setResumes(rData);
-        }
-      } catch (err) {
-        console.error("Failed to load dashboard data", err);
-      } finally {
-        setLoading(false);
+      if (profileRes.ok) {
+        const pData = await profileRes.json();
+        setProfile(pData);
       }
-    };
-
-    loadDashboardData();
+      if (resumesRes.ok) {
+        const rData = await resumesRes.json();
+        setResumes(rData);
+      }
+    } catch (err) {
+      console.error("Failed to load dashboard data", err);
+    } finally {
+      setLoading(false);
+    }
   }, [token, API_BASE_URL]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   if (!user && !loading) {
     return (
@@ -261,13 +263,22 @@ export default function DashboardPage() {
               <FileText className="w-4 h-4 text-slate-300" />
               <span>Role-Specific Resume Versions</span>
             </h3>
-            <Link
-              href="/builder"
-              className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-white text-slate-900 text-xs font-semibold shadow-sm transition-all"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>New Resume</span>
-            </Link>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setIsUploadModalOpen(true)}
+                className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold shadow-sm transition-all"
+              >
+                <UploadCloud className="w-3.5 h-3.5" />
+                <span>Upload & Parse</span>
+              </button>
+              <Link
+                href="/builder"
+                className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-white text-slate-900 text-xs font-semibold shadow-sm transition-all"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>New Resume</span>
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -346,6 +357,14 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Module 4 Resume Ingestion Modal */}
+      <ResumeUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onUploadSuccess={() => loadDashboardData()}
+        mode="dashboard"
+      />
     </div>
   );
 }

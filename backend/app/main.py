@@ -58,7 +58,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         if settings.app_env == "production":
             response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-        return response
+        return response  # type: ignore[no-any-return]
 
 
 # -----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ class RequestCorrelationMiddleware(BaseHTTPMiddleware):
         request.state.request_id = request_id
         start_time = time.perf_counter()
 
-        response = await call_next(request)
+        response: Response = await call_next(request)
 
         duration_ms = (time.perf_counter() - start_time) * 1000
         response.headers["X-Request-ID"] = request_id
@@ -84,7 +84,7 @@ class RequestCorrelationMiddleware(BaseHTTPMiddleware):
             duration_ms,
             request_id,
         )
-        return response
+        return response  # type: ignore[no-any-return]
 
 
 app.add_middleware(SecurityHeadersMiddleware)

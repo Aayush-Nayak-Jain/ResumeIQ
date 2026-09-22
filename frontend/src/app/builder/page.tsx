@@ -16,9 +16,12 @@ import {
   Download,
   Check,
   X,
-  AlertCircle
+  AlertCircle,
+  UploadCloud,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { ResumeUploadModal } from "../../components/ResumeUploadModal";
+import { ParsedResumeResponse } from "../../types";
 
 export default function BuilderPage() {
   const { user } = useAuth();
@@ -218,6 +221,78 @@ export default function BuilderPage() {
     handleDataChange();
   };
 
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
+  const handleApplyParsedResume = (parsed: ParsedResumeResponse) => {
+    const pData = parsed.structured_data;
+    if (pData.personal_info) {
+      setPersonalInfo({
+        fullName: pData.personal_info.full_name || personalInfo.fullName,
+        email: pData.personal_info.email || personalInfo.email,
+        phone: pData.personal_info.phone || personalInfo.phone,
+        location: pData.personal_info.location || personalInfo.location,
+        linkedin: pData.personal_info.linkedin_url || personalInfo.linkedin,
+        github: pData.personal_info.github_url || personalInfo.github,
+      });
+    }
+
+    if (pData.summary) {
+      setSummary(pData.summary);
+    }
+
+    if (pData.experience && pData.experience.length > 0) {
+      setExperiences(
+        pData.experience.map((exp, idx) => ({
+          id: exp.id || String(idx + 1),
+          company: exp.company,
+          title: exp.title,
+          location: exp.location || "",
+          dates: exp.end_date ? `${exp.start_date} - ${exp.end_date}` : exp.start_date,
+          bullets: exp.bullets.length > 0 ? exp.bullets : ["Executed key responsibilities."],
+        }))
+      );
+    }
+
+    if (pData.education && pData.education.length > 0) {
+      setEducation(
+        pData.education.map((edu, idx) => ({
+          id: edu.id || String(idx + 1),
+          institution: edu.institution,
+          degree: edu.degree,
+          dates: edu.end_date ? `${edu.start_date} - ${edu.end_date}` : edu.start_date,
+          grade: edu.grade || "",
+        }))
+      );
+    }
+
+    if (pData.skills && pData.skills.length > 0) {
+      setSkills(
+        pData.skills.map((s) => ({
+          name: s.name,
+          category: s.category || "technical",
+          proficiency: s.proficiency || "intermediate",
+        }))
+      );
+    }
+
+    if (pData.projects && pData.projects.length > 0) {
+      setProjects(
+        pData.projects.map((proj, idx) => ({
+          id: proj.id || String(idx + 1),
+          title: proj.title,
+          description: proj.description || (proj.bullets.length > 0 ? proj.bullets.join(" ") : ""),
+          technologies: proj.technologies.join(", "),
+        }))
+      );
+    }
+
+    if (parsed.metadata.file_name) {
+      setResumeTitle(`Parsed Resume - ${parsed.metadata.file_name.replace(/\.[^/.]+$/, "")}`);
+    }
+
+    handleDataChange();
+  };
+
   const completeness = 88;
 
   return (
@@ -292,6 +367,15 @@ export default function BuilderPage() {
             <option value="modern">Modern Technical</option>
             <option value="executive">Executive Minimal</option>
           </select>
+
+          {/* Upload & Parse Button */}
+          <button
+            onClick={() => setIsUploadModalOpen(true)}
+            className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold shadow-sm transition-all"
+          >
+            <UploadCloud className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Upload & Parse</span>
+          </button>
 
           {/* Print/Download Button */}
           <button
@@ -860,6 +944,14 @@ export default function BuilderPage() {
           </div>
         </div>
       </div>
+
+      {/* Module 4 Resume Ingestion Modal */}
+      <ResumeUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onApplyToBuilder={handleApplyParsedResume}
+        mode="builder"
+      />
     </div>
   );
 }

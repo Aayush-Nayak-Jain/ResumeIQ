@@ -42,7 +42,5 @@ async def update_my_profile(
     db: AsyncSession = Depends(get_db),
 ) -> CandidateProfileResponse:
     """Updates candidate skills, work experience, education, projects, and contact info."""
-    updated = await ProfileService.update_profile(
-        db=db, user_id=current_user.id, req=req
-    )
+    updated = await ProfileService.update_profile(db=db, user_id=current_user.id, req=req)
     return ProfileService.to_response_dto(updated)

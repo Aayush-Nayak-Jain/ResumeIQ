@@ -192,9 +192,7 @@ class ResumeService:
         return resume
 
     @staticmethod
-    async def delete_resume(
-        db: AsyncSession, resume_id: uuid.UUID, user_id: uuid.UUID
-    ) -> None:
+    async def delete_resume(db: AsyncSession, resume_id: uuid.UUID, user_id: uuid.UUID) -> None:
         """Deletes a resume and associated snapshots."""
         resume = await ResumeService.get_resume_by_id(db, resume_id, user_id)
         await db.delete(resume)
