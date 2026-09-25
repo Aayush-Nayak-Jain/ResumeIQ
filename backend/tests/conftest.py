@@ -13,9 +13,10 @@ os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["SECRET_KEY"] = "test-secret-key-32-chars-minimum-length!!"
 os.environ["JWT_SECRET_KEY"] = "test-jwt-secret-key-32-chars-minimum!!"
 
+from app.models.base import Base
+
 from app.db.session import get_db
 from app.main import app
-from app.models.base import Base
 
 # In-memory async test engine
 test_engine = create_async_engine(

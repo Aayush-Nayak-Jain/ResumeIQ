@@ -1,13 +1,14 @@
 """Job Description Service managing DB persistence, user-scoped access, and analysis workflows."""
 
 import uuid
-from typing import Sequence
+from collections.abc import Sequence
+
+from app.models.job_description import JobDescription
 from fastapi import HTTPException, status
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import logger
-from app.models.job_description import JobDescription
 from app.schemas.job_description import (
     CategorizedRequirements,
     JobDescriptionAnalysisResponse,
@@ -60,16 +61,8 @@ class JobDescriptionService:
             force_nlp_only=force_nlp_only,
         )
 
-        final_title = (
-            request.title.strip()
-            if request.title and request.title.strip()
-            else analysis.structured_requirements.job_title or "Target Role"
-        )
-        final_company = (
-            request.company.strip()
-            if request.company and request.company.strip()
-            else analysis.structured_requirements.company
-        )
+        final_title = request.title.strip() if request.title and request.title.strip() else analysis.structured_requirements.job_title or "Target Role"
+        final_company = request.company.strip() if request.company and request.company.strip() else analysis.structured_requirements.company
 
         jd = JobDescription(
             id=uuid.uuid4(),
@@ -122,15 +115,8 @@ class JobDescriptionService:
         limit: int = 50,
     ) -> Sequence[JobDescription]:
         """Lists all job descriptions belonging to the authenticated user."""
-        stmt = (
-            select(JobDescription)
-            .where(JobDescription.user_id == user_id)
-            .order_by(desc(JobDescription.created_at))
-            .offset(skip)
-            .limit(limit)
-        )
-        result = await db.scalars(stmt)
-        return result.all()
+        stmt = select(JobDescription).where(JobDescription.user_id == user_id).order_by(desc(JobDescription.created_at)).offset(skip).limit(limit)
+        return (await db.scalars(stmt)).all()
 
     @classmethod
     async def update_job_description(

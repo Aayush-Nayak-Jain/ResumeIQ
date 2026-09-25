@@ -42,4 +42,3 @@ class SlidingWindowRateLimiter:
 
 auth_rate_limiter = SlidingWindowRateLimiter()
 ai_rate_limiter = SlidingWindowRateLimiter()
-

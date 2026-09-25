@@ -2,11 +2,11 @@
 
 import uuid
 
+from app.models.candidate_profile import CandidateProfile
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import logger
-from app.models.candidate_profile import CandidateProfile
 from app.schemas.profile import CandidateProfileResponse, CandidateProfileUpdateRequest
 
 
@@ -16,9 +16,7 @@ class ProfileService:
     @staticmethod
     async def get_or_create_profile(db: AsyncSession, user_id: uuid.UUID) -> CandidateProfile:
         """Retrieves or creates candidate master profile for the user."""
-        profile = await db.scalar(
-            select(CandidateProfile).where(CandidateProfile.user_id == user_id)
-        )
+        profile = await db.scalar(select(CandidateProfile).where(CandidateProfile.user_id == user_id))
         if not profile:
             profile = CandidateProfile(
                 id=uuid.uuid4(),
@@ -42,9 +40,7 @@ class ProfileService:
         return profile
 
     @staticmethod
-    async def update_profile(
-        db: AsyncSession, user_id: uuid.UUID, req: CandidateProfileUpdateRequest
-    ) -> CandidateProfile:
+    async def update_profile(db: AsyncSession, user_id: uuid.UUID, req: CandidateProfileUpdateRequest) -> CandidateProfile:
         """Updates candidate profile facts while preserving unmentioned fields."""
         profile = await ProfileService.get_or_create_profile(db, user_id)
 

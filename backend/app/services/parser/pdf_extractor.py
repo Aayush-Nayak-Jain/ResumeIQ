@@ -90,9 +90,7 @@ class PDFExtractor:
         # Multi-column layout:
         # Separate into: Top Full-width Header, Left Column, Right Column, Bottom Full-width Footer
         # Determine average y position of left and right blocks to identify header threshold
-        header_y_limit = min(
-            (b[1] for b in text_blocks if (b[2] - b[0]) < page_width * 0.65), default=150.0
-        )
+        header_y_limit = min((b[1] for b in text_blocks if (b[2] - b[0]) < page_width * 0.65), default=150.0)
 
         header_blocks: list[tuple[float, float, float, float, str]] = []
         footer_blocks: list[tuple[float, float, float, float, str]] = []

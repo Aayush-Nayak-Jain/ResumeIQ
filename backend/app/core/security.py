@@ -37,9 +37,7 @@ def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = 
         expire = datetime.now(UTC) + timedelta(minutes=settings.access_token_expire_minutes)
 
     to_encode.update({"exp": expire, "type": "access"})
-    encoded_jwt: str = jwt.encode(
-        to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
-    )
+    encoded_jwt: str = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
     return str(encoded_jwt)
 
 
@@ -52,18 +50,14 @@ def create_refresh_token(data: dict[str, Any], expires_delta: timedelta | None =
         expire = datetime.now(UTC) + timedelta(days=settings.refresh_token_expire_days)
 
     to_encode.update({"exp": expire, "type": "refresh"})
-    encoded_jwt: str = jwt.encode(
-        to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
-    )
+    encoded_jwt: str = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
     return str(encoded_jwt)
 
 
 def decode_token(token: str) -> dict[str, Any]:
     """Decodes and validates a JWT token signature and expiration."""
     try:
-        payload: dict[str, Any] = jwt.decode(
-            token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
-        )
+        payload: dict[str, Any] = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
         return dict(payload)
     except JWTError as exc:
         raise ValueError(f"Invalid token: {str(exc)}") from exc

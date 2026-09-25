@@ -16,4 +16,3 @@ api_v1_router.include_router(auth_router)
 api_v1_router.include_router(profile_router)
 api_v1_router.include_router(resumes_router)
 api_v1_router.include_router(jobs_router)
-

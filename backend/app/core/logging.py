@@ -26,13 +26,9 @@ class PIIFilter(logging.Filter):
             record.msg = self.sanitize(record.msg)
         if record.args:
             if isinstance(record.args, tuple):
-                record.args = tuple(
-                    self.sanitize(arg) if isinstance(arg, str) else arg for arg in record.args
-                )
+                record.args = tuple(self.sanitize(arg) if isinstance(arg, str) else arg for arg in record.args)
             elif isinstance(record.args, dict):
-                record.args = {
-                    k: self.sanitize(v) if isinstance(v, str) else v for k, v in record.args.items()
-                }
+                record.args = {k: self.sanitize(v) if isinstance(v, str) else v for k, v in record.args.items()}
         return True
 
     @classmethod

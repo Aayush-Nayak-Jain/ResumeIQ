@@ -1,7 +1,7 @@
 """Exceptions for AI Gateway and Resume Intelligence services."""
 
 
-class AIServiceException(Exception):
+class AIServiceError(Exception):
     """Base exception for all AI Gateway and AI pipeline errors."""
 
     def __init__(self, message: str, provider: str | None = None, status_code: int = 500):
@@ -11,7 +11,7 @@ class AIServiceException(Exception):
         self.status_code = status_code
 
 
-class AIUnavailableException(AIServiceException):
+class AIUnavailableException(AIServiceError):  # noqa: N818
     """
     Raised when the AI model provider (Ollama or Azure OpenAI) is unreachable,
     rate-limited, or when the circuit breaker is open.
@@ -27,14 +27,14 @@ class AIUnavailableException(AIServiceException):
         self.is_circuit_open = is_circuit_open
 
 
-class AIParsingException(AIServiceException):
+class AIParsingException(AIServiceError):  # noqa: N818
     """Raised when LLM output cannot be parsed into the expected JSON schema."""
 
     def __init__(self, message: str = "Failed to parse structured AI output into expected schema.", provider: str | None = None):
         super().__init__(message=message, provider=provider, status_code=502)
 
 
-class PromptInjectionWarning(AIServiceException):
+class PromptInjectionWarning(AIServiceError):  # noqa: N818
     """Raised when an untrusted input contains severe prompt injection patterns."""
 
     def __init__(self, message: str = "Input contains potentially adversarial instruction patterns.", provider: str | None = None):

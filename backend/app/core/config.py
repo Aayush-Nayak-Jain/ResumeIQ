@@ -70,9 +70,7 @@ class Settings(BaseSettings):
 
     # File Uploads
     max_upload_size_bytes: int = 10 * 1024 * 1024  # 10 MB
-    allowed_mime_types: str = (
-        "application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    )
+    allowed_mime_types: str = "application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     allowed_extensions: str = ".pdf,.docx"
     upload_temp_dir: str = "./temp/uploads"
 

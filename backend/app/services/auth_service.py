@@ -2,6 +2,8 @@
 
 import uuid
 
+from app.models.candidate_profile import CandidateProfile
+from app.models.user import User
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,8 +18,6 @@ from app.core.security import (
     get_password_hash,
     verify_password,
 )
-from app.models.candidate_profile import CandidateProfile
-from app.models.user import User
 from app.schemas.user import (
     TokenResponse,
     UserLoginRequest,

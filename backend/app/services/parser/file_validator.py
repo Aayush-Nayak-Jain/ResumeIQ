@@ -57,10 +57,7 @@ class DocumentValidator:
         if ext not in ALLOWED_EXTENSIONS:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    f"Unsupported file type '{ext}'. Only PDF (.pdf) and "
-                    "Microsoft Word (.docx) documents are supported."
-                ),
+                detail=(f"Unsupported file type '{ext}'. Only PDF (.pdf) and Microsoft Word (.docx) documents are supported."),
             )
 
         # 2. Check payload size (T4.5)
@@ -99,10 +96,7 @@ class DocumentValidator:
         if PDF_MAGIC_BYTES not in prefix:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    "Corrupt or invalid PDF: file content signature does not match "
-                    "PDF specifications."
-                ),
+                detail=("Corrupt or invalid PDF: file content signature does not match PDF specifications."),
             )
 
     @staticmethod
@@ -111,10 +105,7 @@ class DocumentValidator:
         if not content.startswith(ZIP_MAGIC_BYTES):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    "Corrupt or invalid DOCX: file content signature does not match "
-                    "Microsoft Word OpenXML specifications."
-                ),
+                detail=("Corrupt or invalid DOCX: file content signature does not match Microsoft Word OpenXML specifications."),
             )
 
         # Verify internal zip archive structure without executing

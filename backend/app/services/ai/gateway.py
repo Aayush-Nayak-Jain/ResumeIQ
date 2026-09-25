@@ -11,7 +11,8 @@ import asyncio
 import json
 import re
 import time
-from typing import Any, Type, TypeVar
+from typing import Any, TypeVar
+
 import httpx
 from pydantic import BaseModel
 
@@ -122,7 +123,7 @@ class AIGateway:
         self,
         system_prompt: str,
         user_prompt: str,
-        schema_class: Type[T] | None = None,
+        schema_class: type[T] | None = None,
     ) -> dict[str, Any]:
         """
         Executes an AI structured JSON generation request through circuit breaker and retries.
@@ -168,7 +169,7 @@ class AIGateway:
                 )
                 return parsed_dict
 
-            except (httpx.RequestError, httpx.HTTPStatusError, TimeoutError, asyncio.TimeoutError) as exc:
+            except (httpx.RequestError, httpx.HTTPStatusError, TimeoutError) as exc:
                 last_exception = exc
                 logger.warning(
                     "AI Gateway attempt %d/%d failed: %s",

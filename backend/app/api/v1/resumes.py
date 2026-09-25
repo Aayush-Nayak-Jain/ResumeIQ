@@ -80,9 +80,7 @@ async def parse_resume_document(
 async def upload_and_create_resume(
     file: UploadFile = File(..., description="Resume document in PDF or DOCX format"),
     title: str | None = Form(default=None, description="Optional custom title for resume"),
-    is_master: bool = Form(
-        default=False, description="Whether this resume becomes the master profile"
-    ),
+    is_master: bool = Form(default=False, description="Whether this resume becomes the master profile"),
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
 ) -> ResumeResponse:
@@ -112,9 +110,7 @@ async def get_resume(
     db: AsyncSession = Depends(get_db),
 ) -> ResumeResponse:
     """Fetches full structured resume details with zero-trust IDOR ownership verification."""
-    resume = await ResumeService.get_resume_by_id(
-        db=db, resume_id=resume_id, user_id=current_user.id
-    )
+    resume = await ResumeService.get_resume_by_id(db=db, resume_id=resume_id, user_id=current_user.id)
     return ResumeService.to_response_dto(resume)
 
 
@@ -131,9 +127,7 @@ async def update_resume(
     db: AsyncSession = Depends(get_db),
 ) -> ResumeResponse:
     """Updates resume sections and automatically increments revision version number."""
-    updated = await ResumeService.update_resume(
-        db=db, resume_id=resume_id, user_id=current_user.id, req=req
-    )
+    updated = await ResumeService.update_resume(db=db, resume_id=resume_id, user_id=current_user.id, req=req)
     return ResumeService.to_response_dto(updated)
 
 

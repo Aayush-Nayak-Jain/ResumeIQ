@@ -8,7 +8,7 @@ Delivers:
 """
 
 import time
-from typing import Any
+
 from app.core.config import settings
 from app.core.logging import logger
 from app.schemas.job_description import (
@@ -97,8 +97,8 @@ class JobDescriptionAnalyzer:
             logger.warning("Sanitizing input containing injection attempts: count=%d", len(injections))
 
         weights = custom_weights or WeightsConfig()
-        provider_used = settings.llm_provider
-        model_used = settings.ollama_model if settings.llm_provider == "ollama" else settings.azure_openai_deployment_name
+        provider_used: str = settings.llm_provider
+        model_used: str = settings.ollama_model if settings.llm_provider == "ollama" else settings.azure_openai_deployment_name
 
         structured_result: CategorizedRequirements
 
@@ -111,7 +111,7 @@ class JobDescriptionAnalyzer:
             try:
                 # 3. Secure prompt boundary wrapping
                 wrapped_user_prompt = PromptGuard.wrap_in_secure_boundary(sanitized_text)
-                
+
                 # Context hints
                 hints = []
                 if title:

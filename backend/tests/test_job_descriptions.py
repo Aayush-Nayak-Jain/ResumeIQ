@@ -8,7 +8,6 @@ from app.services.ai.circuit_breaker import CircuitBreaker, CircuitState
 from app.services.ai.jd_extractor_nlp import NLPExtractor
 from app.services.ai.prompt_guard import PromptGuard
 
-
 SAMPLE_JD = """
 Senior Backend Engineer (Python / FastAPI)
 Company: CloudTech Solutions
