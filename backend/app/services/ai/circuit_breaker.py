@@ -5,13 +5,14 @@ local Ollama is unstarted or Azure OpenAI rate limits occur (Section 8.1).
 """
 
 import time
-from enum import Enum
+from enum import StrEnum
+
 from app.core.logging import logger
 
 
-class CircuitState(str, Enum):
-    CLOSED = "CLOSED"      # Normal operation, calls allowed
-    OPEN = "OPEN"          # Tripped, calls fast-rejected with AIUnavailableException
+class CircuitState(StrEnum):
+    CLOSED = "CLOSED"  # Normal operation, calls allowed
+    OPEN = "OPEN"  # Tripped, calls fast-rejected with AIUnavailableException
     HALF_OPEN = "HALF_OPEN"  # Trial state, testing if service recovered
 
 

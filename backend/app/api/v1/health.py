@@ -33,11 +33,7 @@ class ReadinessResponse(BaseModel):
 @router.get("", response_model=HealthResponse, status_code=status.HTTP_200_OK)
 async def get_health() -> HealthResponse:
     """Liveness probe: verifies the API service is active and responsive."""
-    active_model = (
-        settings.ollama_model
-        if settings.llm_provider == "ollama"
-        else settings.azure_openai_deployment_name
-    )
+    active_model = settings.ollama_model if settings.llm_provider == "ollama" else settings.azure_openai_deployment_name
     return HealthResponse(
         status="healthy",
         app_name=settings.app_name,

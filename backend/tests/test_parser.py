@@ -79,9 +79,7 @@ def create_sample_multi_column_pdf() -> bytes:
 
     # Full width header
     page.insert_text(fitz.Point(50, 40), "Marcus Vance", fontsize=16)
-    page.insert_text(
-        fitz.Point(50, 60), "marcus.vance@example.com | +1 555 987 6543 | Austin, TX", fontsize=10
-    )
+    page.insert_text(fitz.Point(50, 60), "marcus.vance@example.com | +1 555 987 6543 | Austin, TX", fontsize=10)
     page.insert_text(fitz.Point(50, 75), "https://github.com/marcusvance", fontsize=9)
 
     # Left column: Sidebar (Contact details, Skills, Education) - x: 50 to 200
@@ -103,9 +101,7 @@ def create_sample_multi_column_pdf() -> bytes:
     )
 
     page.insert_text(fitz.Point(250, 180), "Work Experience", fontsize=12)
-    page.insert_text(
-        fitz.Point(250, 200), "Apex Cloud Systems | DevOps Lead | 2020 - Present", fontsize=10
-    )
+    page.insert_text(fitz.Point(250, 200), "Apex Cloud Systems | DevOps Lead | 2020 - Present", fontsize=10)
     page.insert_text(
         fitz.Point(250, 218),
         "• Maintained 99.99% service availability across multi-region Kubernetes clusters.",
@@ -133,20 +129,13 @@ def create_sample_docx() -> bytes:
 
     # Summary
     doc.add_heading("Professional Summary", level=1)
-    doc.add_paragraph(
-        "Full-Stack Developer with 4 years of experience building modern web apps "
-        "with TypeScript, React, Next.js, and Python."
-    )
+    doc.add_paragraph("Full-Stack Developer with 4 years of experience building modern web apps with TypeScript, React, Next.js, and Python.")
 
     # Experience
     doc.add_heading("Work Experience", level=1)
     doc.add_paragraph("Vanguard Tech | Full-Stack Engineer | 2020 - Present")
-    doc.add_paragraph(
-        "Architected REST APIs using Python and FastAPI with PostgreSQL.", style="List Bullet"
-    )
-    doc.add_paragraph(
-        "Built responsive user interfaces with Next.js and Tailwind CSS.", style="List Bullet"
-    )
+    doc.add_paragraph("Architected REST APIs using Python and FastAPI with PostgreSQL.", style="List Bullet")
+    doc.add_paragraph("Built responsive user interfaces with Next.js and Tailwind CSS.", style="List Bullet")
 
     # Education
     doc.add_heading("Education", level=1)
@@ -190,10 +179,7 @@ def test_t4_1_clean_single_column_pdf():
     detected = parsed.metadata.detected_sections
     assert "summary" in detected or "experience" in detected
     assert len(parsed.structured_data.experience) >= 1
-    assert any(
-        "InnovateTech" in e.company or "InnovateTech" in e.title
-        for e in parsed.structured_data.experience
-    )
+    assert any("InnovateTech" in e.company or "InnovateTech" in e.title for e in parsed.structured_data.experience)
 
     # Verify skills extracted
     skill_names = [s.name for s in parsed.structured_data.skills]

@@ -3,6 +3,7 @@
 import uuid
 from datetime import datetime
 from typing import Any, Literal
+
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -43,18 +44,14 @@ class ExperienceRequirement(BaseModel):
 
     min_years: float | None = Field(default=None, ge=0.0, le=50.0)
     max_years: float | None = Field(default=None, ge=0.0, le=50.0)
-    seniority_level: Literal["Intern", "Entry-Level", "Mid-Level", "Senior", "Lead / Staff", "Executive", "Not Specified"] = Field(
-        default="Not Specified"
-    )
+    seniority_level: Literal["Intern", "Entry-Level", "Mid-Level", "Senior", "Lead / Staff", "Executive", "Not Specified"] = Field(default="Not Specified")
     details: list[str] = Field(default_factory=list)
 
 
 class EducationRequirement(BaseModel):
     """Education requirements extracted from JD."""
 
-    degree_level: Literal["High School / Diploma", "Bachelor's", "Master's", "PhD / Doctorate", "Not Specified"] = Field(
-        default="Not Specified"
-    )
+    degree_level: Literal["High School / Diploma", "Bachelor's", "Master's", "PhD / Doctorate", "Not Specified"] = Field(default="Not Specified")
     fields_of_study: list[str] = Field(default_factory=list)
     is_required: bool = Field(default=False)
     details: list[str] = Field(default_factory=list)

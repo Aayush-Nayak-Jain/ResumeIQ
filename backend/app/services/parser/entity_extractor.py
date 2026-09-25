@@ -116,9 +116,7 @@ KNOWN_SKILLS: dict[str, tuple[str, str]] = {
 # Regex patterns for contact data
 EMAIL_REGEX = re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+")
 PHONE_REGEX = re.compile(r"(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}")
-LINKEDIN_REGEX = re.compile(
-    r"(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+", re.IGNORECASE
-)
+LINKEDIN_REGEX = re.compile(r"(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+", re.IGNORECASE)
 GITHUB_REGEX = re.compile(r"(?:https?:\/\/)?(?:www\.)?github\.com\/[a-zA-Z0-9_-]+", re.IGNORECASE)
 URL_REGEX = re.compile(r"https?:\/\/[^\s]+", re.IGNORECASE)
 
@@ -270,11 +268,7 @@ class EntityExtractor:
                 parts = [p.strip() for p in re.split(r"[|–—\-,]\s*", remaining) if p.strip()]
 
                 company = parts[0] if len(parts) > 0 else "Company"
-                title = (
-                    parts[1]
-                    if len(parts) > 1
-                    else (parts[0] if len(parts) > 0 else "Software Engineer")
-                )
+                title = parts[1] if len(parts) > 1 else (parts[0] if len(parts) > 0 else "Software Engineer")
 
                 current_entry = {
                     "company": company,

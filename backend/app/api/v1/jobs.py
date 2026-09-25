@@ -1,7 +1,7 @@
 """Job Description Analysis API Endpoints (Module 5)."""
 
 import uuid
-from typing import Sequence
+
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -95,9 +95,7 @@ async def list_job_descriptions(
     db: AsyncSession = Depends(get_db),
 ) -> list[JobDescriptionSummaryResponse]:
     """Retrieves all target job postings submitted by the authenticated candidate."""
-    jds = await JobDescriptionService.list_job_descriptions(
-        db=db, user_id=current_user.id, skip=skip, limit=limit
-    )
+    jds = await JobDescriptionService.list_job_descriptions(db=db, user_id=current_user.id, skip=skip, limit=limit)
     return [JobDescriptionService.to_summary_dto(jd) for jd in jds]
 
 
@@ -113,9 +111,7 @@ async def get_job_description(
     db: AsyncSession = Depends(get_db),
 ) -> JobDescriptionResponse:
     """Retrieves structured requirements and weights configuration with IDOR protection."""
-    jd = await JobDescriptionService.get_job_description(
-        db=db, user_id=current_user.id, jd_id=jd_id
-    )
+    jd = await JobDescriptionService.get_job_description(db=db, user_id=current_user.id, jd_id=jd_id)
     return JobDescriptionService.to_response_dto(jd)
 
 
@@ -135,9 +131,7 @@ async def update_job_description(
     if req.reanalyze and req.raw_text:
         check_ai_rate_limit(current_user.id)
 
-    jd = await JobDescriptionService.update_job_description(
-        db=db, user_id=current_user.id, jd_id=jd_id, update_data=req
-    )
+    jd = await JobDescriptionService.update_job_description(db=db, user_id=current_user.id, jd_id=jd_id, update_data=req)
     return JobDescriptionService.to_response_dto(jd)
 
 
@@ -152,9 +146,7 @@ async def delete_job_description(
     db: AsyncSession = Depends(get_db),
 ) -> Response:
     """Permanently deletes a target job description and associated evaluation links."""
-    await JobDescriptionService.delete_job_description(
-        db=db, user_id=current_user.id, jd_id=jd_id
-    )
+    await JobDescriptionService.delete_job_description(db=db, user_id=current_user.id, jd_id=jd_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -171,7 +163,5 @@ async def reanalyze_job_description(
 ) -> JobDescriptionResponse:
     """Re-runs structured AI extraction against the stored JD text."""
     check_ai_rate_limit(current_user.id)
-    jd = await JobDescriptionService.reanalyze_job_description(
-        db=db, user_id=current_user.id, jd_id=jd_id
-    )
+    jd = await JobDescriptionService.reanalyze_job_description(db=db, user_id=current_user.id, jd_id=jd_id)
     return JobDescriptionService.to_response_dto(jd)

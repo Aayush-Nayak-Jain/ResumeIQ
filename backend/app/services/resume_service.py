@@ -2,12 +2,12 @@
 
 import uuid
 
+from app.models.resume import Resume, ResumeVersion
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import logger
-from app.models.resume import Resume, ResumeVersion
 from app.schemas.resume import (
     ResumeCreateRequest,
     ResumeListResponse,
@@ -67,15 +67,11 @@ class ResumeService:
         return min(100, score)
 
     @staticmethod
-    async def create_resume(
-        db: AsyncSession, user_id: uuid.UUID, req: ResumeCreateRequest
-    ) -> Resume:
+    async def create_resume(db: AsyncSession, user_id: uuid.UUID, req: ResumeCreateRequest) -> Resume:
         """Creates a new master or tailored resume document."""
         # If marked as master, unset any prior master resumes for this user
         if req.is_master:
-            existing_masters = await db.scalars(
-                select(Resume).where(Resume.user_id == user_id, Resume.is_master.is_(True))
-            )
+            existing_masters = await db.scalars(select(Resume).where(Resume.user_id == user_id, Resume.is_master.is_(True)))
             for old_master in existing_masters:
                 old_master.is_master = False
 
@@ -118,11 +114,7 @@ class ResumeService:
     @staticmethod
     async def list_resumes(db: AsyncSession, user_id: uuid.UUID) -> list[ResumeListResponse]:
         """Lists resumes strictly belonging to authenticated user (zero-trust IDOR defense)."""
-        result = await db.scalars(
-            select(Resume)
-            .where(Resume.user_id == user_id)
-            .order_by(Resume.is_master.desc(), Resume.updated_at.desc())
-        )
+        result = await db.scalars(select(Resume).where(Resume.user_id == user_id).order_by(Resume.is_master.desc(), Resume.updated_at.desc()))
         resumes = result.all()
         responses = []
         for r in resumes:
@@ -132,13 +124,9 @@ class ResumeService:
         return responses
 
     @staticmethod
-    async def get_resume_by_id(
-        db: AsyncSession, resume_id: uuid.UUID, user_id: uuid.UUID
-    ) -> Resume:
+    async def get_resume_by_id(db: AsyncSession, resume_id: uuid.UUID, user_id: uuid.UUID) -> Resume:
         """Fetches a single resume with strict user ownership validation."""
-        resume = await db.scalar(
-            select(Resume).where(Resume.id == resume_id, Resume.user_id == user_id)
-        )
+        resume = await db.scalar(select(Resume).where(Resume.id == resume_id, Resume.user_id == user_id))
         if not resume:
             logger.warning(
                 "Resume access denied or not found [resume_id=%s, user_id=%s]",
@@ -152,16 +140,12 @@ class ResumeService:
         return resume
 
     @staticmethod
-    async def update_resume(
-        db: AsyncSession, resume_id: uuid.UUID, user_id: uuid.UUID, req: ResumeUpdateRequest
-    ) -> Resume:
+    async def update_resume(db: AsyncSession, resume_id: uuid.UUID, user_id: uuid.UUID, req: ResumeUpdateRequest) -> Resume:
         """Updates resume fields and records an incremental version snapshot."""
         resume = await ResumeService.get_resume_by_id(db, resume_id, user_id)
 
         update_dict = req.model_dump(exclude_unset=True)
-        structured_data_changed = (
-            "structured_data" in update_dict and update_dict["structured_data"] is not None
-        )
+        structured_data_changed = "structured_data" in update_dict and update_dict["structured_data"] is not None
 
         if "title" in update_dict and update_dict["title"] is not None:
             resume.title = update_dict["title"].strip()

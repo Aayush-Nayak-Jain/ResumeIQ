@@ -4,6 +4,7 @@ Implements zero-trust isolation for user-supplied JD and resume documents (Secti
 """
 
 import re
+
 from app.core.logging import logger
 
 # Delimiters for strict context isolation

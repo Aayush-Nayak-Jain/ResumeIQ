@@ -10,10 +10,10 @@ Enforces:
 import time
 import uuid
 
+from app.models.resume import Resume, ResumeVersion
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import logger
-from app.models.resume import Resume, ResumeVersion
 from app.schemas.parser import (
     ParsedResumeResponse,
     ParserMetadata,
@@ -137,19 +137,13 @@ class ParserService:
         )
 
         # Determine resume title
-        title = (
-            custom_title.strip()
-            if custom_title and custom_title.strip()
-            else f"Parsed Resume - {filename.rsplit('.', 1)[0]}"
-        )
+        title = custom_title.strip() if custom_title and custom_title.strip() else f"Parsed Resume - {filename.rsplit('.', 1)[0]}"
 
         # If marking as master, demote existing masters
         if is_master:
             from sqlalchemy import select
 
-            existing_masters = await db.scalars(
-                select(Resume).where(Resume.user_id == user_id, Resume.is_master.is_(True))
-            )
+            existing_masters = await db.scalars(select(Resume).where(Resume.user_id == user_id, Resume.is_master.is_(True)))
             for m in existing_masters:
                 m.is_master = False
 

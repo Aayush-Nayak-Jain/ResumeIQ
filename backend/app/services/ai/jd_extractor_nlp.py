@@ -6,6 +6,7 @@ experience limits, education levels, and domain expectations.
 
 import re
 from typing import Any
+
 from app.schemas.job_description import (
     CategorizedRequirements,
     EducationRequirement,
@@ -34,7 +35,6 @@ TAXONOMY_SKILLS: dict[str, dict[str, Any]] = {
     "css": {"canonical": "CSS3", "category": "technical", "weight": 0.7},
     "bash": {"canonical": "Bash/Shell", "category": "technical", "weight": 0.8},
     "scala": {"canonical": "Scala", "category": "technical", "weight": 0.9},
-
     # Frameworks & Libraries
     "fastapi": {"canonical": "FastAPI", "category": "technical", "weight": 1.0},
     "django": {"canonical": "Django", "category": "technical", "weight": 1.0},
@@ -54,7 +54,6 @@ TAXONOMY_SKILLS: dict[str, dict[str, Any]] = {
     "graphql": {"canonical": "GraphQL", "category": "technical", "weight": 0.9},
     "rest": {"canonical": "REST APIs", "category": "technical", "weight": 0.9},
     "restful": {"canonical": "RESTful APIs", "category": "technical", "weight": 0.9},
-
     # Databases & Storage
     "postgresql": {"canonical": "PostgreSQL", "category": "technical", "weight": 1.0},
     "postgres": {"canonical": "PostgreSQL", "category": "technical", "weight": 1.0},
@@ -66,7 +65,6 @@ TAXONOMY_SKILLS: dict[str, dict[str, Any]] = {
     "dynamodb": {"canonical": "DynamoDB", "category": "technical", "weight": 0.9},
     "pgvector": {"canonical": "pgvector", "category": "technical", "weight": 0.9},
     "cassandra": {"canonical": "Cassandra", "category": "technical", "weight": 0.9},
-
     # Cloud & DevOps & Tools
     "aws": {"canonical": "AWS", "category": "tool", "weight": 1.0},
     "azure": {"canonical": "Azure", "category": "tool", "weight": 1.0},
@@ -82,7 +80,6 @@ TAXONOMY_SKILLS: dict[str, dict[str, Any]] = {
     "ci/cd": {"canonical": "CI/CD", "category": "methodology", "weight": 0.9},
     "jenkins": {"canonical": "Jenkins", "category": "tool", "weight": 0.8},
     "linux": {"canonical": "Linux", "category": "technical", "weight": 0.8},
-
     # AI / ML / Data Science
     "machine learning": {"canonical": "Machine Learning", "category": "technical", "weight": 1.0},
     "deep learning": {"canonical": "Deep Learning", "category": "technical", "weight": 1.0},
@@ -95,7 +92,6 @@ TAXONOMY_SKILLS: dict[str, dict[str, Any]] = {
     "llm": {"canonical": "LLMs", "category": "technical", "weight": 1.0},
     "rag": {"canonical": "Retrieval-Augmented Generation (RAG)", "category": "technical", "weight": 1.0},
     "langchain": {"canonical": "LangChain", "category": "technical", "weight": 0.9},
-
     # Soft Skills & Behavioral
     "communication": {"canonical": "Strong Communication", "category": "soft", "weight": 0.8},
     "collaboration": {"canonical": "Team Collaboration", "category": "soft", "weight": 0.8},
@@ -190,7 +186,6 @@ class NLPExtractor:
 
         return seniority, min_years, max_years
 
-
     @classmethod
     def extract_education(cls, text: str) -> EducationRequirement:
         """Extracts degrees and fields of study from JD text."""
@@ -240,7 +235,7 @@ class NLPExtractor:
         for key, val in DOMAIN_KEYWORDS.items():
             if re.search(rf"\b{re.escape(key)}\b", text_lower):
                 domains.add(val)
-        return sorted(list(domains))
+        return sorted(domains)
 
     @classmethod
     def extract_responsibilities(cls, text: str) -> list[str]:
@@ -269,9 +264,7 @@ class NLPExtractor:
                 is_resp_section = True
                 continue
 
-            if is_resp_section and any(
-                h in lower_line for h in ["requirements", "qualifications", "what you bring", "skills", "benefits", "about us"]
-            ):
+            if is_resp_section and any(h in lower_line for h in ["requirements", "qualifications", "what you bring", "skills", "benefits", "about us"]):
                 is_resp_section = False
                 continue
 
@@ -288,9 +281,7 @@ class NLPExtractor:
         return responsibilities[:12]
 
     @classmethod
-    def extract_skills_and_categories(
-        cls, text: str
-    ) -> tuple[list[str], list[str], list[SkillRequirement], list[str], list[str]]:
+    def extract_skills_and_categories(cls, text: str) -> tuple[list[str], list[str], list[SkillRequirement], list[str], list[str]]:
         """
         Extracts required vs preferred skills, detailed skill requirements,
         tools & technologies, and behavioral expectations.
@@ -368,10 +359,41 @@ class NLPExtractor:
         """Extracts high-salience terms suitable for ATS indexing."""
         words = re.findall(r"\b[A-Za-z][A-Za-z0-9\.\+#\-]{2,}\b", text)
         stopwords = {
-            "the", "and", "for", "with", "that", "this", "from", "have", "will", "your",
-            "are", "you", "our", "team", "work", "job", "company", "role", "years", "experience",
-            "looking", "candidate", "ability", "skills", "knowledge", "working", "across",
-            "including", "about", "other", "such", "using", "must", "well", "plus",
+            "the",
+            "and",
+            "for",
+            "with",
+            "that",
+            "this",
+            "from",
+            "have",
+            "will",
+            "your",
+            "are",
+            "you",
+            "our",
+            "team",
+            "work",
+            "job",
+            "company",
+            "role",
+            "years",
+            "experience",
+            "looking",
+            "candidate",
+            "ability",
+            "skills",
+            "knowledge",
+            "working",
+            "across",
+            "including",
+            "about",
+            "other",
+            "such",
+            "using",
+            "must",
+            "well",
+            "plus",
         }
         freq: dict[str, int] = {}
         for w in words:

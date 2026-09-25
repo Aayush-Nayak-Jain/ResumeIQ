@@ -89,5 +89,3 @@ __all__ = [
     "JobDescriptionResponse",
     "JobDescriptionSummaryResponse",
 ]
-
-

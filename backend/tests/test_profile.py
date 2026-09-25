@@ -49,10 +49,7 @@ async def test_update_my_profile_facts(async_client: AsyncClient):
 
     update_payload = {
         "headline": "Senior Backend & Cloud Architect",
-        "summary": (
-            "Experienced software engineer with 6+ years building "
-            "resilient distributed cloud systems."
-        ),
+        "summary": ("Experienced software engineer with 6+ years building resilient distributed cloud systems."),
         "contact_info": {
             "phone": "+1-555-0199",
             "location": "San Francisco, CA",
