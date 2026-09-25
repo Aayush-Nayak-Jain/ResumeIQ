@@ -1,6 +1,6 @@
-# AI Resume Intelligence Platform — Database & Vector Storage Architecture
+# FreeResume — Database & Vector Storage Architecture
 
-This document describes the PostgreSQL 16 + `pgvector` data architecture designed for the AI Resume Intelligence Platform.
+This document describes the PostgreSQL 16 + `pgvector` data architecture designed for FreeResume.
 
 ---
 

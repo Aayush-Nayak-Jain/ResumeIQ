@@ -13,9 +13,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ResumeIQ — Resume Intelligence & Career Optimization Platform",
+  title: "FreeResume — AI-Powered Resume Builder & Career Optimization Platform",
   description:
-    "Construct high-impact ATS resumes, evaluate bullet point evidence, and tailor multiple role-specific versions.",
+    "Build high-impact ATS resumes for free, evaluate bullet point evidence, and tailor multiple role-specific versions with FreeResume.",
 };
 
 export default function RootLayout({

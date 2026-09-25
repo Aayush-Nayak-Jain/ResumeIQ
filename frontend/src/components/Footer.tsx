@@ -34,7 +34,7 @@ export const Footer: React.FC = () => {
                 <Code2 className="w-4 h-4" />
               </div>
               <span className="font-bold text-slate-900 dark:text-white tracking-tight text-base">
-                ResumeIQ
+                FreeResume
               </span>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -170,7 +170,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar: Copyright & Quick Theme Switcher */}
         <div className="mt-12 pt-8 border-t border-slate-200 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
-          <p>© {new Date().getFullYear()} ResumeIQ Platform. Free-tier open architecture.</p>
+          <p>© {new Date().getFullYear()} FreeResume. Free-tier open architecture.</p>
           <div className="flex items-center space-x-4">
             <span>Engineered with clean design</span>
             <span>•</span>

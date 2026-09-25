@@ -1,7 +1,7 @@
 [project]
-name = "ai-resume-intelligence-backend"
+name = "freeresume-backend"
 version = "0.1.0"
-description = "FastAPI Backend for AI Resume Intelligence Platform"
+description = "FastAPI Backend for FreeResume — AI-Powered Resume Builder"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115.0",

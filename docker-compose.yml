@@ -44,7 +44,7 @@ services:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
-      - NEXT_PUBLIC_APP_NAME=AI Resume Intelligence Platform
+      - NEXT_PUBLIC_APP_NAME=FreeResume
     volumes:
       - ./frontend:/app
       - /app/node_modules

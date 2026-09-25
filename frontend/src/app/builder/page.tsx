@@ -96,7 +96,7 @@ export default function BuilderPage() {
   const [projects, setProjects] = useState([
     {
       id: "1",
-      title: "ResumeIQ Intelligence Platform",
+      title: "FreeResume Intelligence Platform",
       description: "Dual-mode semantic ATS resume evaluation engine with fact-grounded recommendations.",
       technologies: "FastAPI, Next.js, PostgreSQL, pgvector",
     },

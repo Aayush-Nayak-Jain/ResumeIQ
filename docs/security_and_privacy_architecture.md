@@ -1,4 +1,4 @@
-# AI Resume Intelligence Platform — Security & Privacy Architecture
+# FreeResume — Security & Privacy Architecture
 
 This document establishes the security, privacy, and AI integrity design principles embedded into every layer of the platform from Phase 0 onwards.
 

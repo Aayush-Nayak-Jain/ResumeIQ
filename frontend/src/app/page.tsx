@@ -355,14 +355,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. COMPARISON SECTION (ResumeIQ vs. Enhancv vs. Traditional Builders) */}
+      {/* 4. COMPARISON SECTION (FreeResume vs. Enhancv vs. Traditional Builders) */}
       <section className="glass-panel rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-white/10 shadow-xl space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <div className="inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-emerald-50 dark:bg-slate-900 border border-emerald-200 dark:border-slate-800 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 mb-1">
             <span>Market Benchmark</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-            Why ResumeIQ Stands Out
+            Why FreeResume Stands Out
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
             Compare our semantic intelligence and evidence verification platform against commercial builders.
@@ -376,7 +376,7 @@ export default function HomePage() {
               <tr className="border-b border-slate-200 dark:border-slate-800 text-xs">
                 <th className="py-4 px-4 font-bold text-slate-700 dark:text-slate-300 w-2/5">Capability / Feature</th>
                 <th className="py-4 px-4 font-extrabold text-emerald-600 dark:text-emerald-400 w-1/5 text-center bg-emerald-50/50 dark:bg-emerald-950/20 rounded-t-xl">
-                  ResumeIQ
+                  FreeResume
                 </th>
                 <th className="py-4 px-4 font-semibold text-slate-600 dark:text-slate-400 w-1/5 text-center">
                   Enhancv
@@ -471,7 +471,7 @@ export default function HomePage() {
           Ready to Upgrade Your Career Trajectory?
         </h2>
         <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-          Join thousands of engineering candidates tailoring high-impact, evidence-backed resumes with ResumeIQ.
+          Join thousands of engineering candidates tailoring high-impact, evidence-backed resumes with FreeResume.
         </p>
         <div className="pt-2">
           <Link

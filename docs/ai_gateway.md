@@ -1,4 +1,4 @@
-# AI Resume Intelligence Platform — AI Gateway & Dual-Mode Architecture
+# FreeResume — AI Gateway & Dual-Mode Architecture
 
 This document details the design, configuration, failure handling, and cost-containment rules of the Shared AI Gateway.
 

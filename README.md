@@ -1,10 +1,10 @@
-# AI Resume Intelligence Platform
+# FreeResume
 
 > 🚧 **Development in Progress** — this project is actively being built. Core modules are under construction; features listed below reflect the planned/target scope and may not all be implemented yet.
 
 ## Overview
 
-The **AI Resume Intelligence Platform** helps job seekers create, evaluate, optimize, and tailor resumes for specific job opportunities.
+**FreeResume** helps job seekers create, evaluate, optimize, and tailor resumes for specific job opportunities.
 
 Rather than acting as a simple resume builder or keyword checker, it analyzes the relationship between a candidate's resume and a target job description using natural language processing, semantic matching, and LLM-based evaluation. The goal is to close the gap between what a candidate wrote, what a job actually requires, and what an ATS or recruiter will evaluate — and to give **actionable recommendations**, not just a score.
 

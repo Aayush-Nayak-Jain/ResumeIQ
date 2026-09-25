@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     )
 
     # Core Application
-    app_name: str = "AI Resume Intelligence Platform"
+    app_name: str = "FreeResume"
     app_env: Literal["local", "staging", "production", "test"] = "local"
     debug: bool = True
     log_level: str = "INFO"

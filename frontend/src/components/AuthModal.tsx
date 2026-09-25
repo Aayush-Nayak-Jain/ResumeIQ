@@ -79,7 +79,7 @@ export const AuthModal: React.FC = () => {
             <Lock className="w-6 h-6 text-emerald-400" />
           </div>
           <h3 className="text-xl font-bold tracking-tight text-white">
-            {isSignup ? "Create an Account" : "Sign In to ResumeIQ"}
+            {isSignup ? "Create an Account" : "Sign In to FreeResume"}
           </h3>
           <p className="text-xs text-slate-400 mt-1">
             {isSignup
