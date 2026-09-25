@@ -143,7 +143,7 @@ class ParserService:
         if is_master:
             from sqlalchemy import select
 
-            existing_masters = await db.scalars(select(Resume).where(Resume.user_id == user_id, Resume.is_master.is_(True)))
+            existing_masters: list[Resume] = (await db.scalars(select(Resume).where(Resume.user_id == user_id, Resume.is_master.is_(True)))).all()
             for m in existing_masters:
                 m.is_master = False
 

@@ -71,7 +71,7 @@ class ResumeService:
         """Creates a new master or tailored resume document."""
         # If marked as master, unset any prior master resumes for this user
         if req.is_master:
-            existing_masters = await db.scalars(select(Resume).where(Resume.user_id == user_id, Resume.is_master.is_(True)))
+            existing_masters: list[Resume] = (await db.scalars(select(Resume).where(Resume.user_id == user_id, Resume.is_master.is_(True)))).all()
             for old_master in existing_masters:
                 old_master.is_master = False
 
@@ -114,8 +114,9 @@ class ResumeService:
     @staticmethod
     async def list_resumes(db: AsyncSession, user_id: uuid.UUID) -> list[ResumeListResponse]:
         """Lists resumes strictly belonging to authenticated user (zero-trust IDOR defense)."""
-        result = await db.scalars(select(Resume).where(Resume.user_id == user_id).order_by(Resume.is_master.desc(), Resume.updated_at.desc()))
-        resumes = result.all()
+        resumes: list[Resume] = (
+            await db.scalars(select(Resume).where(Resume.user_id == user_id).order_by(Resume.is_master.desc(), Resume.updated_at.desc()))
+        ).all()
         responses = []
         for r in resumes:
             dto = ResumeListResponse.model_validate(r)

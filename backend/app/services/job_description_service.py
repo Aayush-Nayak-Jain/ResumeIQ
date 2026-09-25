@@ -116,8 +116,7 @@ class JobDescriptionService:
     ) -> Sequence[JobDescription]:
         """Lists all job descriptions belonging to the authenticated user."""
         stmt = select(JobDescription).where(JobDescription.user_id == user_id).order_by(desc(JobDescription.created_at)).offset(skip).limit(limit)
-        result = await db.scalars(stmt)
-        return result.all()
+        return (await db.scalars(stmt)).all()
 
     @classmethod
     async def update_job_description(

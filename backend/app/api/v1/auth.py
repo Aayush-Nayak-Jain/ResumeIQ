@@ -89,6 +89,5 @@ async def list_users_admin(
     db: AsyncSession = Depends(get_db),
 ) -> list[UserResponse]:
     """Admin-only endpoint to inspect user accounts."""
-    result = await db.scalars(select(User).order_by(User.created_at.desc()))
-    users = result.all()
+    users: list[User] = (await db.scalars(select(User).order_by(User.created_at.desc()))).all()
     return [UserResponse.model_validate(u) for u in users]
