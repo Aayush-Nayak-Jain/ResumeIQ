@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sparkles, LogIn, UserPlus, LogOut, Shield, LayoutDashboard, Edit3, Home, Sun, Moon } from "lucide-react";
+import { Sparkles, LogIn, UserPlus, LogOut, Shield, LayoutDashboard, Edit3, Home, Sun, Moon, Search } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 
@@ -16,7 +16,9 @@ export const Navbar: React.FC = () => {
     { href: "/", label: "Overview", icon: Home },
     { href: "/dashboard", label: "Master Profile", icon: LayoutDashboard },
     { href: "/builder", label: "Resume Builder", icon: Edit3 },
+    { href: "/jd-analyzer", label: "JD Analyzer", icon: Search },
   ];
+
 
   return (
     <header className="border-b border-slate-200 dark:border-white/10 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">

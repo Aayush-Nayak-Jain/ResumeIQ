@@ -66,7 +66,7 @@ jobs:
           APP_ENV: test
           SECRET_KEY: test-secret-key-for-ci-runs-only
           JWT_SECRET_KEY: test-jwt-secret-key-for-ci-runs-only
-          DATABASE_URL: sqlite+aiosqlite:///:memory:
+          DATABASE_URL: "sqlite+aiosqlite:///:memory:"
           LLM_PROVIDER: ollama
         run: |
           pytest backend/tests -v --cov=backend/app --cov-report=term-missing

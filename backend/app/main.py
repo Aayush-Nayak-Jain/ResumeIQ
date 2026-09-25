@@ -27,9 +27,20 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # Ensure upload temporary directories exist securely
     os.makedirs(settings.upload_temp_dir, exist_ok=True)
 
+    # Auto-initialize database tables for local execution
+    try:
+        from app.models.base import Base
+        from app.db.session import engine
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database tables verified/created successfully.")
+    except Exception as exc:
+        logger.warning("Could not auto-create database tables on startup: %s", str(exc))
+
     yield
 
     logger.info("Shutting down %s", settings.app_name)
+
 
 
 app = FastAPI(

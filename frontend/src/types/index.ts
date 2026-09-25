@@ -122,3 +122,94 @@ export interface ParsedResumeResponse {
   metadata: ParserMetadata;
   completeness_score: number;
 }
+
+// Module 5: Job Description Analysis Types
+export interface WeightsConfig {
+  skills: number;
+  experience: number;
+  projects: number;
+  education: number;
+  semantic_similarity: number;
+  certifications: number;
+}
+
+export interface SkillRequirement {
+  name: string;
+  category: "technical" | "soft" | "domain" | "tool" | "methodology";
+  importance: "required" | "preferred" | "bonus";
+  weight: number;
+  context?: string | null;
+}
+
+export interface ExperienceRequirement {
+  min_years?: number | null;
+  max_years?: number | null;
+  seniority_level: string;
+  details: string[];
+}
+
+export interface EducationRequirement {
+  degree_level: string;
+  fields_of_study: string[];
+  is_required: boolean;
+  details: string[];
+}
+
+export interface CategorizedRequirements {
+  job_title: string;
+  company?: string | null;
+  summary: string;
+  seniority_level: string;
+  required_skills: string[];
+  preferred_skills: string[];
+  skills_detailed: SkillRequirement[];
+  responsibilities: string[];
+  experience_requirements: ExperienceRequirement;
+  education_requirements: EducationRequirement;
+  tools_and_technologies: string[];
+  domain_knowledge: string[];
+  behavioral_expectations: string[];
+  keywords: string[];
+}
+
+export interface JobDescriptionAnalysisMetadata {
+  extraction_duration_ms: number;
+  llm_provider: string;
+  llm_model: string;
+  character_count: number;
+  word_count: number;
+  required_skills_count: number;
+  preferred_skills_count: number;
+  responsibilities_count: number;
+  tools_count: number;
+}
+
+export interface JobDescriptionAnalysisResponse {
+  structured_requirements: CategorizedRequirements;
+  weights_config: WeightsConfig;
+  metadata: JobDescriptionAnalysisMetadata;
+}
+
+export interface JobDescriptionResponse {
+  id: string;
+  user_id: string;
+  title: string;
+  company?: string | null;
+  raw_text: string;
+  structured_requirements: CategorizedRequirements;
+  weights_config: WeightsConfig;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface JobDescriptionSummaryResponse {
+  id: string;
+  title: string;
+  company?: string | null;
+  required_skills_count: number;
+  tools_count: number;
+  seniority_level: string;
+  created_at: string;
+  updated_at: string;
+}
+
